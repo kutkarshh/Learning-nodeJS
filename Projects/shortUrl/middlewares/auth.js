@@ -15,7 +15,7 @@ function checkForAuthentication(req, res, next) {
 
 function restrictTo(roles) {
     return function (req, res, next) {
-        console.log("Checking user:", req.user);
+        console.log("Checking user:", req.user); 
         if (!req.user) {
             console.log("No user found, redirecting to /login");
             return res.redirect("/login");

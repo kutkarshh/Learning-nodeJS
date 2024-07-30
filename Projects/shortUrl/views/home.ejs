@@ -1,64 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home Page</title>
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-      crossorigin="anonymous"
-    />
-    <style>
-      * {
-        font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-      }
-      table,
-      th,
-      td {
-        border: 1px solid black;
-        border-collapse: collapse;
-      }
-      th,
-      td {
-        padding: 10px;
-      }
-      .container {
-        padding: 20px;
-      }
-      .table-container {
-        display: flex;
-        justify-content: space-between;
-      }
-      .table-title {
-        text-align: center;
-        font-weight: bold;
-        margin-bottom: 10px;
-      }
-      .dropdown-menu-right {
-        right: 0;
-        left: auto;
-      }
-    </style>
-  </head>
-  <body class="container">
-    <div class="row justify-content-between align-items-center">
-      <div class="col text-center">
-        <h1>Url Shortener App</h1>
-      </div>
-      <% if (locals.name) { %>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home Page</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+  <style>
+    * {
+      font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+    }
+
+    table,
+    th,
+    td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 10px;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .table-container {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .table-title {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .dropdown-menu-right {
+      right: 0;
+      left: auto;
+    }
+  </style>
+</head>
+
+<body class="container">
+  <div class="row justify-content-between align-items-center">
+    <div class="col text-center">
+      <h1>Url Shortener App</h1>
+    </div>
+    <% if (locals.name) { %>
       <div class="col-md-auto">
         <div class="dropdown">
-          <button
-            class="btn btn-secondary dropdown-toggle"
-            type="button"
-            id="dropdownMenuButton"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            <%= locals.name %> <%=locals.role ? `(${locals.role})` : ''%>
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            <%= locals.name %>
+              <%=locals.role ? `(${locals.role})` : '' %>
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="#">Profile</a>
@@ -67,139 +66,165 @@
         </div>
       </div>
       <% } %>
-    </div>
-    <div class="mb-4">
-      <form action="/url" method="POST">
-        <div class="form-group">
-          <h4 for="url">Enter Original Url:</h4>
-          <input
-            class="form-control"
-            type="text"
-            name="url"
-            placeholder="https://example.com"
-            required
+  </div>
+  <div class="mb-4">
+    <form action="/url" method="POST">
+      <div class="form-group">
+        <h4 for="url">Enter Original Url:</h4>
+        <input class="form-control" type="text" name="url" placeholder="https://example.com" required autofocus <% if
+          (locals.id || locals.deleted) { %>
+        disabled
+        <% } %>
           />
-        </div>
-        <div class="form-group text-center">
-          <button class="btn btn-primary" type="submit">Shorten</button>
-        </div>
-      </form>
+      </div>
+      <div class="form-group text-center">
+        <button class="btn btn-primary" <% if (locals.id || locals.deleted) { %>
+          disabled
+          <% } %>
+            type="submit">Shorten
+        </button>
+      </div>
+    </form>
 
-      <% if (locals.id) { %>
-      <div class="p-2 bg-info text-white text-center">
-        Shortened Url:
-        <a
-          href="http://localhost:8001/url/<%= id %>"
-          target="_blank"
-          class="text-white"
-          >http://localhost:8001/url/<%= id %></a
-        >
+    <% if (locals.id) { %>
+      <div class="p-2 bg-dark text-white text-center text-xl-center">
+        <div class="col">
+          <h3 class="mb-3">Shortened Url:</h3>
+          <h1>
+            <a href="http://localhost:8001/url/<%= id %>" target="_blank"
+              class="bg-warning p-2 rounded text-decoration-none text-white">http://localhost:8001/url/<%= id %>
+                <a />
+          </h1>
+          <a class="btn btn-primary mt-2" href="/">Go to Homepage</a>
+        </div>
       </div>
       <% } %>
-    </div>
+  </div>
 
-    <% if (locals.error) { %>
-    <div class="alert alert-danger">Some Error Occurred: <%= error %></div>
-    <% } %> <% if (locals.deleted) { %>
-    <div class="alert alert-success">
-      URL Deleted Successfully! <b>id:<%= deleted %></b>
+  <% if (locals.error) { %>
+    <div class="alert alert-danger">Some Error Occurred: <%= error %>
     </div>
     <% } %>
+      <% if (locals.deleted) { %>
+        <div class="alert alert-success text-center">
+          URL Deleted Successfully! <b>id:<%= deleted %></b>
+          <br>
+          <a class="btn btn-primary mt-2" href="/">Go to Homepage</a>
+        </div>
+        <% } %>
 
-    <div class="table-container">
-      <% if (locals.my_urls && locals.my_urls.length) { %>
-      <div class="table-responsive mr-2">
-        <div class="table-title">My URLs</div>
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>S. No</th>
-              <th>Short ID</th>
-              <th>Redirect URL</th>
-              <th>Clicks</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% my_urls.forEach((url, index) => { %>
-            <tr>
-              <td><%= index + 1 %></td>
-              <td><%= url.shortId %></td>
-              <td><%= url.redirectUrl %></td>
-              <td><%= url.visitHistory.length %></td>
-              <td>
-                <form
-                  action="/url/del/<%=url.shortId%>"
-                  method="POST"
-                  style="display: inline"
-                >
-                  <input type="hidden" name="_method" value="DELETE" />
-                  <button type="submit" class="btn btn-danger btn-sm">
-                    Delete
-                  </button>
-                </form>
-              </td>
-            </tr>
-            <% }) %>
-          </tbody>
-        </table>
-      </div>
-      <% } %> <% if (locals.all_urls && locals.all_urls.length) { %>
-      <div class="table-responsive">
-        <div class="table-title">Public URLs</div>
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>S. No</th>
-              <th>Short ID</th>
-              <th>Redirect URL</th>
-              <th>Clicks</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% all_urls.forEach((url, index) => { %>
-            <tr>
-              <td><%= index + 1 %></td>
-              <td><%= url.shortId %></td>
-              <td><%= url.redirectUrl %></td>
-              <td><%= url.visitHistory.length %></td>
-              <td>
-                <a
-                  href="/url/<%= url.shortId %>"
-                  target="_blank"
-                  class="btn btn-primary btn-sm"
-                  >Visit</a
-                >
-              </td>
-            </tr>
-            <% }) %>
-          </tbody>
-        </table>
-      </div>
-      <% } %>
-    </div>
+          <div class="table-container">
+            <% if (locals.my_urls && locals.my_urls.length) { %>
+              <div class="table-responsive mr-2">
+                <div class="table-title">My URLs</div>
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>S. No</th>
+                      <th>Short ID</th>
+                      <th>Redirect URL</th>
+                      <th>Clicks</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% my_urls.forEach((url, index)=> { %>
+                      <tr>
+                        <td>
+                          <%= index + 1 %>
+                        </td>
+                        <td>
+                          <%= url.shortId %>
+                        </td>
+                        <td>
+                          <%= url.redirectUrl %>
+                        </td>
+                        <td>
+                          <%= url.visitHistory.length %>
+                        </td>
+                        <td>
+                          <form action="/url/del/<%=url.shortId%>" method="POST" style="display: inline">
+                            <input type="hidden" name="_method" value="DELETE" />
+                            <button type="submit" class="btn btn-danger btn-sm">
+                              Delete
+                            </button>
+                          </form>
+                        </td>
+                      </tr>
+                      <% }) %>
+                  </tbody>
+                </table>
+              </div>
+              <% } %>
+                <% if (locals.all_urls && locals.all_urls.length) { %>
+                  <div class="table-responsive">
+                    <div class="table-title">Other Public URLs</div>
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>S. No</th>
+                          <th>Short ID</th>
+                          <th>Redirect URL</th>
+                          <th>Clicks</th>
+                          <% if (locals.role=="ADMIN" ) { %>
+                            <td><b>Created By</b></td>
+                            <%}%>
+                              <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% all_urls.forEach((url, index)=> { %>
+                          <tr>
+                            <td>
+                              <%= index + 1 %>
+                            </td>
+                            <td>
+                              <%= url.shortId %>
+                            </td>
+                            <td>
+                              <%= url.redirectUrl %>
+                            </td>
+                            <td>
+                              <%= url.visitHistory.length %>
+                            </td>
+                            <% if (locals.role==="ADMIN" ) { %>
+                              <td>
+                                <%= url.createdByName %>
+                              </td>
+                              <%}%>
+                                <td>
+                                  <a href="/url/<%= url.shortId %>" target="_blank"
+                                    class="btn btn-primary btn-sm">Visit</a>
+                                  <% if (locals.role==="ADMIN" ) { %>
+                                    <form action="/url/del/<%=url.shortId%>" method="POST" style="display: inline">
+                                      <input type="hidden" name="_method" value="DELETE" />
+                                      <button type="submit" class="btn btn-danger btn-sm">
+                                        Delete
+                                      </button>
+                                    </form>
+                                </td>
+                                <% } %>
+                          </tr>
+                          <% }) %>
+                      </tbody>
+                    </table>
+                  </div>
+                  <% } %>
+          </div>
+          <% if ((!locals.my_urls || locals.my_urls.length===0) && (!locals.all_urls || locals.all_urls.length===0) &&
+            !locals.deleted && !locals.id) { %>
+            <div class="alert alert-info text-center">No URLs Found</div>
+            <% } %>
+              <!-- Include jQuery and Bootstrap JS -->
+              <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+                integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+                crossorigin="anonymous"></script>
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+                integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+                crossorigin="anonymous"></script>
+              <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+                integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+                crossorigin="anonymous"></script>
+</body>
 
-    <% if ((!locals.my_urls || locals.my_urls.length === 0) && (!locals.all_urls
-    || locals.all_urls.length === 0)) { %>
-    <div class="alert alert-info text-center">No URLs Found</div>
-    <% } %>
-
-    <!-- Include jQuery and Bootstrap JS -->
-    <script
-      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
-      integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-      crossorigin="anonymous"
-    ></script>
-  </body>
 </html>

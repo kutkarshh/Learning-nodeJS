@@ -32,7 +32,7 @@ app.use(cookieParser());
 app.use(checkForAuthentication);
 
 app.use("/", staticRoute);
-app.use("/url", restrictTo(["NORMAL"]), urlRoute);
+app.use("/url", urlRoute);
 app.use("/user", userRoute);
 
 app.listen(PORT, () => console.log(`Server Started at PORT ${PORT}`));
