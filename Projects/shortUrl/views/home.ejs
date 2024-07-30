@@ -6,7 +6,7 @@
     <title>Home Page</title>
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
       integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
       crossorigin="anonymous"
     />
@@ -36,11 +36,38 @@
         font-weight: bold;
         margin-bottom: 10px;
       }
+      .dropdown-menu-right {
+        right: 0;
+        left: auto;
+      }
     </style>
   </head>
   <body class="container">
-    <h1 class="text-center">Welcome to Url Shortener App</h1>
-
+    <div class="row justify-content-between align-items-center">
+      <div class="col text-center">
+        <h1>Url Shortener App</h1>
+      </div>
+      <% if (locals.name) { %>
+      <div class="col-md-auto">
+        <div class="dropdown">
+          <button
+            class="btn btn-secondary dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <%= locals.name %> <%=locals.role ? `(${locals.role})` : ''%>
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#">Profile</a>
+            <a class="dropdown-item" href="/logout">Logout</a>
+          </div>
+        </div>
+      </div>
+      <% } %>
+    </div>
     <div class="mb-4">
       <form action="/url" method="POST">
         <div class="form-group">
@@ -57,6 +84,7 @@
           <button class="btn btn-primary" type="submit">Shorten</button>
         </div>
       </form>
+
       <% if (locals.id) { %>
       <div class="p-2 bg-info text-white text-center">
         Shortened Url:
@@ -156,5 +184,22 @@
     || locals.all_urls.length === 0)) { %>
     <div class="alert alert-info text-center">No URLs Found</div>
     <% } %>
+
+    <!-- Include jQuery and Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+      integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>

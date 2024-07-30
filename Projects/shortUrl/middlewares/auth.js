@@ -1,43 +1,33 @@
 const { getUser } = require("../services/auth");
 
+function checkForAuthentication(req, res, next) {
+    const tokenCookie = req.cookies?.token;
 
+    req.user = null;
+    if (!tokenCookie) return next();
 
-async function restrictToLoggedInUserOnly(req, res, next) {
-    // when using cookie authentication
-    // const userId = req.cookies?.uid;
-    // const user = getUser(userId);
-    // if (!user) return res.redirect("/login");
-    // req.user = user;
-    // next();
-
-
-    // when using response header authentication (which is Standard way of stateful authentication)
-    const userId = req.headers["authorization"];
-    if (!userId) return res.redirect("/login");
-    const token = userId.split(" ")[1];
-
+    const token = tokenCookie
     const user = getUser(token);
-    if (!user) return res.redirect("/login");
-
-    console.log("Middleware:" + user);
+    console.log(user);
     req.user = user;
-    next();
+    return next();
 }
 
-async function checkAuth(req, res, next) {
-
-    // when using cookie authentication
-    // const userId = req.cookies?.uid;
-    // const user = getUser(userId);
-    // req.user = user;
-
-    // when using response header authentication (which is Standard way of stateful authentication)
-    const userId = req.headers["authorization"];
-    const token = userId.split(" ")[1];
-    const user = getUser(token);
-    req.user = user;
-
-    next();
+function restrictTo(roles) {
+    return function (req, res, next) {
+        console.log("Checking user:", req.user);
+        if (!req.user) {
+            console.log("No user found, redirecting to /login");
+            return res.redirect("/login");
+        }
+        if (!roles.includes(req.user.role)) {
+            console.log("User role not authorized:", req.user.role);
+            return res.status(403).end("You have no access. UnAuthorized");
+        }
+        console.log("User authorized:", req.user.role);
+        return next();
+    }
 }
 
-module.exports = { restrictToLoggedInUserOnly, checkAuth }
+
+module.exports = { checkForAuthentication, restrictTo }
