@@ -1,24 +1,42 @@
 const { getUser } = require("../services/auth");
+
+
+
 async function restrictToLoggedInUserOnly(req, res, next) {
+    // when using cookie authentication
+    // const userId = req.cookies?.uid;
+    // const user = getUser(userId);
+    // if (!user) return res.redirect("/login");
+    // req.user = user;
+    // next();
 
-    const userId = req.cookies?.sessionId;
 
-    const user = getUser(userId);
+    // when using response header authentication (which is Standard way of stateful authentication)
+    const userId = req.headers["authorization"];
+    if (!userId) return res.redirect("/login");
+    const token = userId.split(" ")[1];
+
+    const user = getUser(token);
     if (!user) return res.redirect("/login");
 
-    if (!userId) return res.redirect("/login");
-
+    console.log("Middleware:" + user);
     req.user = user;
     next();
 }
 
 async function checkAuth(req, res, next) {
 
-    const userId = req.cookies?.sessionId;
+    // when using cookie authentication
+    // const userId = req.cookies?.uid;
+    // const user = getUser(userId);
+    // req.user = user;
 
-    const user = getUser(userId);
-
+    // when using response header authentication (which is Standard way of stateful authentication)
+    const userId = req.headers["authorization"];
+    const token = userId.split(" ")[1];
+    const user = getUser(token);
     req.user = user;
+
     next();
 }
 

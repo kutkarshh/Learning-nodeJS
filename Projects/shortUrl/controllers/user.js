@@ -33,10 +33,20 @@ async function handleUserLogin(req, res) {
     })
     if (user) {
         console.log("User Logged in...");
-        const sessionId = uuidv4();
-        setUser(sessionId, user);
-        res.cookie("sessionId", sessionId, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true });
-        return res.redirect("/");
+
+        // const sessionId = uuidv4();
+        // setUser(sessionId, user);
+        // res.cookie("sessionId", sessionId, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true });
+        // no need for sessionId when we using JWT Authentication
+
+        const token = setUser(user);
+        // if using cookie authentication
+        // res.cookie("uid", token);
+        // return res.redirect("/");
+
+        // if using response header authentication (which is Standard way of stateful authentication)
+        console.log(token);
+        return res.json({ token }); // pass token as response
     }
     else {
         console.log("Error", "Wrong Credentials or User not Registered");
