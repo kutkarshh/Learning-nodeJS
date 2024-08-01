@@ -2,16 +2,32 @@
 <html lang="en">
 
 <head>
-    <title>SignUp - Blogosaurus</title>
+    <title>Create Account - Blogosaurus</title>
     <%- include('partials/head') %>
+        <style>
+            .form-label {
+                font-weight: bold;
+            }
+
+            .container {
+                margin-top: 50px;
+                max-width: 500px;
+                /* Limit the width of the form container */
+            }
+
+            body {
+                overflow-y: hidden;
+                /* Prevent vertical scrolling */
+            }
+        </style>
 </head>
 
 <body>
     <%- include('partials/navbar.ejs') %>
         <%- include('partials/script.ejs') %>
             <div class="container col-md-5 card card-body mt-5">
-                <h1>SignUp</h1>
-                <form action="/user/signup" method="post">
+                <h1 class="text-center">Create Account</h1>
+                <form action="/user/signup" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="fullName" class="form-label">Full Name</label>
                         <input type="text" class="form-control" id="fullName" name="fullName"
@@ -28,7 +44,11 @@
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" name="password" id="password" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <div class="mb-3">
+                        <label for="profileImage" class="form-label">Profile Image</label>
+                        <input type="file" class="form-control" name="profileImage" id="profileImage" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Submit</button>
                 </form>
             </div>
 </body>

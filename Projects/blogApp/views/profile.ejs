@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Profile - Blogosaurus</title>
+    <%- include('partials/head') %>
+        <!-- Ensure Bootstrap CSS is included in the head -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css">
+</head>
+
+<body>
+    <%- include('partials/navbar.ejs') %>
+        <%- include('partials/script.ejs') %>
+
+            <% if (locals.user) { %>
+                <div class="container mt-5">
+                    <div class="card card-body text-center">
+                        <label class="display-3 mb-4">User Profile</label>
+                        <div class="mb-3">
+                            <img src="../public/images/<%= locals.user.profileImageURL %>" alt="Profile Image"
+                                class="img-fluid rounded-circle border border-danger"
+                                style="width: 150px; height: 150px;">
+                            <hr />
+                            <label class="form-label h3">User Name : <%= locals.user.fullName %></label>
+                            <hr />
+                            <label class="form-label h3">Email : <%= locals.user.email %></label>
+                        </div>
+
+                    </div>
+
+                    <div class="card card-body mt-4">
+                        <div class="">
+                            <label class="display-4">Blogs</label>
+                            <% if (locals.blogs) { %>
+                                <ul class="list-group">
+                                    <% locals.blogs.forEach(blog=> { %>
+                                        <li class="list-group-item">
+                                            <a href="/blog/<%= blog.id %>" class="text-decoration-none">
+                                                <%= blog.title %>
+                                            </a>
+                                        </li>
+                                </ul>
+                                <% }) %>
+                                    <% } else { %>
+                                        <p class="text-danger h3">Error loading blog information.</p>
+                                        <% } %>
+                        </div>
+                    </div>
+                </div>
+
+                <% } else { %>
+                    <p class="text-danger h3">Error loading profile information.</p>
+                    <% } %>
+
+                        <!-- Ensure Bootstrap JS is included before closing the body tag -->
+                        <script
+                            src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

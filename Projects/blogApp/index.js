@@ -2,9 +2,14 @@ const path = require("path");
 const express = require("express");
 const userRoute = require("./routes/user");
 const { connectToDb } = require("./connection");
+const cookieParser = require("cookie-parser");
+const { checkForAuthenticationCookie } = require("./middlewares/authentication");
 
 const app = express();
-PORT = 3000;
+const PORT = 3000;
+
+// Static files middleware
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // Using Middleware
 app.use(express.static('public', {
@@ -15,7 +20,10 @@ app.use(express.static('public', {
     }
 }));
 
+// Using Middleware -- Plugin
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(checkForAuthenticationCookie("token"));
 
 app.set("view engine", "ejs");
 app.set("views", path.resolve("./views"));
@@ -29,7 +37,9 @@ connectToDb("mongodb://127.0.0.1:27017/blogosaurus")
 app.use("/user", userRoute);
 
 app.get("/", (req, res) => {
-    return res.render("home");
-})
+    res.render("home", {
+        user: req.user,
+    });
+});
 
 app.listen(PORT, () => console.log(`Server Started at PORT ${PORT}`));
