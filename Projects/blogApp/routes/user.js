@@ -13,20 +13,32 @@ router.get("/signup", (req, res) => {
 
 router.post("/signin", async (req, res) => {
     const { email, password } = req.body;
-    const user = await User.matchPassword(email, password);
+    try {
+        const token = await User.matchPasswordAndGenerateToken(email, password);
 
-    if (!user) return res.render("login", { error: "Wrong Credentials" });
-    console.log("User Logged in..", user);
-    return res.redirect("/");
+        if (!token) return res.render("login", { error: "Wrong Credentials" });
+        console.log("User Logged in..", token);
+        return res.cookie("token", token).redirect("/"); // pass token as response
+    } catch (error) {
+        // console.log(error.message);
+        res.render("signin", { error: error.message });
+    }
 })
 
 router.post("/signup", async (req, res) => {
     const { fullName, email, password } = req.body;
-    await User.create({
-        fullName,
-        email,
-        password
-    })
+
+    try {
+        await User.create({
+            fullName,
+            email,
+            password
+        })
+    } catch (error) {
+        console.log("Error----> " + error.message);
+        if (error.code === 11000) return res.render("signup", { error: "User Already Exists!" });
+        return res.render("signup", { error: error.message });
+    }
     return res.redirect("/");
 })
 
