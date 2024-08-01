@@ -61,7 +61,12 @@
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="#">Profile</a>
-            <a class="dropdown-item" href="/logout">Logout</a>
+            <% if (locals.admin) { %>
+              <a class="dropdown-item" href="/admin/urls">Admin Dashboard</a>
+              <% } else { %>
+                <a class="dropdown-item" href="/">Dashboard</a>
+                <% } %>
+                  <a class="dropdown-item" href="/logout">Logout</a>
           </div>
         </div>
       </div>

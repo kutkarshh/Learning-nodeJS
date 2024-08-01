@@ -4,6 +4,8 @@ const URL = require("../models/url");
 const { restrictTo } = require("../middlewares/auth");
 const User = require("../models/user");
 
+var isAdmin = false;
+
 router.get("/admin/urls", restrictTo(["ADMIN"]), async (req, res) => {
     const allUrls = await URL.find({});
     const allUrlName = await Promise.all(
@@ -18,12 +20,15 @@ router.get("/admin/urls", restrictTo(["ADMIN"]), async (req, res) => {
     return res.render("home", { all_urls: allUrlName, name: req.user.name, role: "ADMIN" });
 })
 
-router.get("/", restrictTo(["NORMAL"]), async (req, res) => {
+router.get("/", restrictTo(["NORMAL", "ADMIN"]), async (req, res) => {
     // if (!req.user) return res.render("login");
+    if (req.user.role === "ADMIN") isAdmin = true;
+    else isAdmin = false;
+    console.log(req.user.role, isAdmin);
     const myUrls = await URL.find({ createdBy: req.user._id });
     var allUrls = await URL.find({});
     allUrls = allUrls.filter((url) => !myUrls.some(myUrl => myUrl._id.toString() === url._id.toString()));
-    return res.render("home", { all_urls: allUrls, my_urls: myUrls, name: req.user.name });
+    return res.render("home", { all_urls: allUrls, my_urls: myUrls, name: req.user.name, admin: isAdmin });
 });
 router.get("/signup", async (req, res) => {
     return res.render("signup");

@@ -30,11 +30,14 @@ async function handleDeleteUrlById(req, res) {
         const url = await URL.findOneAndDelete({ shortId });
         if (!url) {
             const allUrls = await URL.find({});
-            return res.render("home", { error: "Url Not Found", urls: allUrls });
+            // Redirect to home with an error message as a query parameter
+            return res.redirect('/?error=Url Not Found');
         }
-        return res.render("home", { deleted: shortId, url: url });
+        // Redirect to home with the deleted shortId as a query parameter
+        return res.redirect(`/?deleted=${shortId}`);
     } catch (error) {
-        return res.render("home", { error: "Error Deleting Url" });
+        // Redirect to home with an error message as a query parameter
+        return res.redirect('/?error=Error Deleting Url');
     }
 }
 
