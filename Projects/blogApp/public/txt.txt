@@ -1,0 +1,848 @@
+home.ejs
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Blogosaurus</title>
+    <%- include('partials/head') %>
+</head>
+
+<body class="bg-light">
+    <%- include('partials/navbar.ejs') %>
+        <%- include('partials/script.ejs') %>
+            <div class="container card card-body my-5">
+                <h1 class="text-center">Welcome to Blogosaurus</h1>
+                <div class="row mt-3">
+                    <% blogs.forEach(blog=> { %>
+                        <div class="col-4 mt-2">
+                            <div class="card">
+                                <img src="<%= blog.coverImageURL %>" width="100%" height="220px" class="card-img-top"
+                                    alt="coverImageURL">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <%= blog.title %>
+                                    </h5>
+                                    <a href="/blog/<%= blog._id %>" class="btn btn-primary">View More</a>
+                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                </div>
+            </div>
+
+
+</body>
+
+</html>
+
+profile.ejs
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Profile - Blogosaurus</title>
+    <%- include('partials/head') %>
+        <style>
+            .userIcon {
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+                border: 5px solid gold;
+            }
+        </style>
+</head>
+
+<body class="bg-warning">
+    <%- include('partials/navbar.ejs') %>
+        <%- include('partials/script.ejs') %>
+            <% if (locals.user) { %>
+                <div class="container my-5">
+                    <div class="card card-body text-center">
+                        <label class="display-3 mb-4">User Profile</label>
+                        <div class="mb-3">
+                            <img src="/images/<%= locals.user.profileImageURL %>" alt="Profile Image"
+                                class="img-fluid userIcon">
+                            <hr />
+                            <label class="form-label h3">User Name : <%= locals.user.fullName %></label>
+                            <hr />
+                            <label class="form-label h3">Email : <%= locals.user.email %></label>
+                        </div>
+                    </div>
+                    <div class="card card-body mt-4">
+                        <label class="display-4">Blogs</label>
+                        <% if (locals.blogs) { %>
+                            <div class="row mt-3">
+                                <% blogs.forEach(blog=> { %>
+                                    <div class="col-4 mt-2">
+                                        <div class="card">
+                                            <img src="<%= blog.coverImageURL %>" width="100%" height="220px"
+                                                class="card-img-top" alt="coverImageURL">
+                                            <div class="card-body">
+                                                <h5 class="card-title">
+                                                    <%= blog.title %>
+                                                </h5>
+                                                <div class="text-center">
+                                                    <a href="/blog/<%= blog._id %>" class="btn btn-primary">View
+                                                        More</a>
+                                                    <a href="/blog/delete/<%= blog._id %>"
+                                                        class="btn btn-danger">Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% }) %>
+                            </div>
+                            <% } else { %>
+                                <p class="text-danger h3">Error loading blog information.</p>
+                                <% } %>
+                                    </>
+                    </div>
+
+                    <% } else { %>
+                        <p class="text-danger h3">Error loading profile information.</p>
+                        <% } %>
+
+                            <!-- Ensure Bootstrap JS is included before closing the body tag -->
+                            <script
+                                src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Blog - Blogosaurus</title>
+    <%- include('partials/head') %>
+</head>
+
+<body class="bg-primary mb-5">
+    <%- include('partials/navbar.ejs') %>
+        <%- include('partials/script.ejs') %>
+            <% if (locals.blog) { %>
+                <div class="container my-5">
+                    <div class="card card-body ">
+                        <h1 class="">
+                            <%= blog.title %>
+                        </h1>
+                        <div class="m-2">
+                            <img src="/images<%= blog.createdBy.profileImageURL%>" width="50px" height="50px"
+                                class="img-fluid border border-secondary" />
+                            <%= blog.createdBy.fullName %>
+                        </div>
+                        <div class="text-center my-2">
+                            <img src="<%= blog.coverImageURL %>" height="500px" class="text-center" alt="coverImageURL">
+                        </div>
+                        <div>
+                            <p class="text-justify">
+                                <%= blog.body %>
+                            </p>
+                        </div>
+                        <div class="container mt-3">
+                            <div class="card card-body">
+                                <h1>Comments</h1>
+                                <% if (locals.comments) { %>
+                                    <% locals.comments.forEach(comment=> { %>
+                                        <div class="card my-2">
+                                            <div class="card-body">
+                                                <h5 class="card-title">
+                                                    <img src="/images<%= comment.createdBy.profileImageURL%>"
+                                                        width="30px" height="30px"
+                                                        class="img-fluid border border-secondary" />
+                                                    <%= comment.createdBy.fullName %>
+                                                </h5>
+                                                <p class="card-text">
+                                                    <%= comment.content %>
+                                                </p>
+                                                <small class="text-muted">Posted on <%= comment.createdAt %></small>
+                                            </div>
+                                        </div>
+                                        <% }) %>
+                                            <% } else {%>
+                                                <div class="card my-2">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">
+                                                            No Comments Found
+                                                        </h5>
+                                                    </div>
+                                                </div>
+                                                <% } %>
+                                                    <form action="/blog/comment/<%= blog._id %>" method="post">
+                                                        <div class="row">
+                                                            <div class="col-10">
+                                                                <input type="text" class="form-control" required
+                                                                    placeholder="Enter your Comment" name="content">
+                                                            </div>
+                                                            <div class="col-2">
+                                                                <button type="submit"
+                                                                    class="btn btn-info w-100">Comment</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+</body>
+
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Add Blog - Blogosaurus</title>
+    <%- include('partials/head') %>
+        <style>
+            .form-label {
+                font-weight: bold;
+            }
+
+            .container {
+                margin-top: 50px;
+                max-width: 500px;
+                /* Limit the width of the form container */
+            }
+
+            body {
+                overflow-y: hidden;
+                /* Prevent vertical scrolling */
+            }
+        </style>
+</head>
+
+<body class="bg-info d-flex flex-column min-vh-100">
+    <%- include('partials/navbar.ejs') %>
+        <%- include('partials/script.ejs') %>
+            <div class="container col-md-5 card card-body mt-5">
+                <h1 class="text-center">Create New Blog</h1>
+                <form action="/blog/add-new" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="body" class="form-label">Description</label>
+                        <textarea class="form-control" name="body" placeholder="Leave a comment here"
+                            id="body"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="coverImageURL" class="form-label">Blog Cover Image</label>
+                        <input type="file" class="form-control" name="coverImageURL" id="coverImageURL">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Submit</button>
+                </form>
+            </div>
+</body>
+
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Sign In - Blogosaurus</title>
+    <%- include('partials/head') %>
+</head>
+
+<body class="bg-secondary">
+    <%- include('partials/navbar.ejs') %>
+        <%- include('partials/script.ejs') %>
+            <div class="container col-md-5 card card-body mt-5">
+                <h1>Sign In</h1>
+                <form action="/user/signin" method="post">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control" required id="email" name="email"
+                            aria-describedby="emailHelp">
+                        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" required class="form-control" name="password" id="password">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+</body>
+
+</html>
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Create Account - Blogosaurus</title>
+    <%- include('partials/head') %>
+        <style>
+            .form-label {
+                font-weight: bold;
+            }
+
+            .container {
+                margin-top: 50px;
+                max-width: 500px;
+                /* Limit the width of the form container */
+            }
+
+            body {
+                overflow-y: hidden;
+                /* Prevent vertical scrolling */
+            }
+        </style>
+</head>
+
+<body class="bg-secondary">
+    <%- include('partials/navbar.ejs') %>
+        <%- include('partials/script.ejs') %>
+            <div class="container col-md-5 card card-body mt-5">
+                <h1 class="text-center">Create Account</h1>
+                <form action="/user/signup" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="fullName" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="fullName" name="fullName"
+                            aria-describedby="fullNameHelp" required>
+                        <div id="fullNameHelp" class="form-text">We'll never share your name with anyone else.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp"
+                            required>
+                        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" id="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="profileImage" class="form-label">Profile Image</label>
+                        <input type="file" class="form-control" name="profileImage" id="profileImage">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Submit</button>
+                </form>
+            </div>
+</body>
+
+</html>
+
+
+head.ejs
+
+{
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+}
+
+
+navbar.ejs {
+
+<nav class="navbar navbar-dark navbar-expand-lg border-bottom border-body bg-dark text-white" data-bs-theme="dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Blogosaurus</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                </li>
+                <% if (locals.user) { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/blog/add-new">Add Blog</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <%=locals.user.fullName%>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/user/profile">Profile</a></li>
+                            <li><a class="dropdown-item" href="#">My Blogs</a></li>
+                            <li><a class="dropdown-item" href="/user/logout">Logout</a></li>
+                        </ul>
+                    </li>
+                    <% } else { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/user/signup">Create Account</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/user/signin">Sign In</a>
+                        </li>
+                        <% }%>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<% if (locals.error) { %>
+    <div class="container mt-4">
+        <div class="alert alert-danger" role="alert">
+            <%= locals.error %>
+        </div>
+    </div>
+    <% } %>
+
+
+}
+
+
+
+authentication.js
+
+
+const JWT = require("jsonwebtoken"); // JSON WEB TOKEN
+const JWT_SECRET = "myJS#2024LearningNodeJS";
+
+function createTokenForUser(user) {
+    const payload = {
+        _id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        profileImageURL: user.profileImageURL,
+        role: user.role,
+    };
+    const token = JWT.sign(payload, JWT_SECRET);
+    return token;
+}
+
+function validateToken(token) {
+    const payload = JWT.verify(token, JWT_SECRET);
+    return payload;
+}
+
+module.exports = { createTokenForUser, validateToken };
+
+
+
+
+imageUploader.js
+
+
+
+// Using Multer to upload files
+const multer = require("multer")
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        console.log();
+        if (file.fieldname === "profileImage")
+            return cb(null, "./public/images/uploads/user");
+        else if (file.fieldname === "coverImageURL")
+            return cb(null, "./public/images/uploads/blog");
+
+        return cb(null, "./public/images/uploads");
+    },
+    filename: function (req, file, cb) {
+        return cb(null, ${Date.now()}-${file.originalname});
+    }
+})
+
+const upload = multer({ storage: storage })
+
+module.exports = upload;
+
+
+
+route/blog.js
+
+
+const { Router } = require("express");
+const Blog = require("../models/blog");
+const Comment = require("../models/comment");
+const uploadImage = require("../services/imageUploader");
+
+
+const router = Router();
+
+router.get("/add-new", (req, res) => {
+    return res.render("addBlog", { user: req.user })
+})
+
+router.get("/:id", async (req, res) => {
+    const { id } = req.params;
+    const blog = await Blog.findById(id).populate("createdBy");
+    const comments = await Comment.find({ blogId: id }).populate("createdBy");
+    return res.render("blog", { blog, user: req.user, comments })
+})
+
+router.post("/add-new", uploadImage.single("coverImageURL"), async (req, res) => {
+    const { title, body } = req.body;
+    const coverImageURL = req.file ? /images/uploads/blog/${req.file.filename} : null;
+    const createdBy = req.user._id;
+    var blog = { title, body, coverImageURL, createdBy };
+    if (coverImageURL === null) blog = { title, body, createdBy };
+    try {
+        await Blog.create(blog);
+        return res.redirect("/");
+    } catch (error) {
+        console.log("Error----> " + error.message);
+        return res.render("addBlog", { error: error.message });
+    }
+});
+
+// Delete the Blog Post
+router.get("/delete/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+        await Blog.findByIdAndDelete(id);
+        return res.redirect("/");
+    } catch (error) {
+        console.log("Error----> " + error.message);
+        res.error = error.message;
+        return res.redirect(/user/${id});
+    }
+});
+
+router.post("/edit/:id", uploadImage.single("coverImageURL"), async (req, res) => {
+    const { id } = req.params;
+    const { title, body } = req.body;
+    const coverImageURL = req.file ? /images/uploads/blog/${req.file.filename} : null;
+    const createdBy = req.user._id;
+    var blog = { title, body, coverImageURL, createdBy };
+    if (coverImageURL === null) blog = { title, body, createdBy };
+    try {
+        await Blog.findByIdAndUpdate(id, blog);
+        return res.redirect("/");
+    } catch (error) {
+        console.log("Error----> " + error.message);
+        return res.render("editBlog", { error: error.message });
+    }
+});
+
+// Creating Comments on the Blog Posts
+
+router.post("/comment/:blogId/", async (req, res) => {
+    if (!req.user) return res.render("signin", { error: "You are not Logged In. Please Login First!" });
+    const comment = await Comment.create({
+        content: req.body.content,
+        blogId: req.params.blogId,
+        createdBy: req.user._id,
+    })
+
+    return res.redirect(/blog/${req.params.blogId});
+});
+
+module.exports = router
+
+
+
+
+route/user.js
+
+
+const { Router } = require("express");
+const User = require("../models/user");
+const uploadImage = require("../services/imageUploader");
+const Blog = require("../models/blog");
+const router = Router();
+
+router.get("/signin", (req, res) => {
+    return res.render("signin");
+});
+
+router.get("/signup", (req, res) => {
+    return res.render("signup");
+});
+
+router.post("/signin", async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const token = await User.matchPasswordAndGenerateToken(email, password);
+        if (!token) return res.render("signin", { error: "Wrong Credentials" });
+        console.log("User Logged in..", email);
+        return res.cookie("token", token).redirect("/"); // pass token as response
+    } catch (error) {
+        return res.render("signin", { error: error.message });
+    }
+});
+
+router.post("/signup", uploadImage.single("profileImage"), async (req, res) => {
+    const { fullName, email, password } = req.body;
+    // profile image location will be stored in uploads folder
+    const profileImageURL = req.file ? /uploads/user/${req.file.filename} : null;
+    var user = { fullName, email, password, profileImageURL };
+    try {
+        if (profileImageURL === null)
+            user = { fullName, email, password };
+        await User.create(user);
+        return res.redirect("/");
+    } catch (error) {
+        console.log("Error----> " + error.message);
+        if (error.code === 11000) return res.render("signup", { error: "User Already Exists!" });
+        return res.render("signup", { error: error.message });
+    }
+});
+
+router.get("/profile", async (req, res) => {
+    if (!req.user) return res.redirect("/login");
+
+    try {
+        // Fetch the user data
+        const user = req.user;
+
+        // Fetch all blogs created by the user
+        const blogs = await Blog.find({ createdBy: user._id });
+
+        // Render the profile view with user data and their blogs
+        return res.render("profile", { user, blogs });
+    } catch (error) {
+        console.log("Error fetching profile data: " + error.message);
+        return res.render("profile", { error: "Error fetching profile data" });
+    }
+});
+
+
+router.get("/logout", (req, res) => {
+    console.log("User Logged out...");
+    return res.clearCookie("token").redirect("/");
+});
+
+module.exports = router;
+
+
+
+model/user.js
+
+
+const { createHmac, randomBytes } = require("node:crypto");
+const { Schema, model } = require("mongoose");
+const { createTokenForUser } = require("../services/authentication");
+
+const userSchema = new Schema({
+    fullName: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    salt: {
+        type: String,
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    profileImageURL: {
+        type: String,
+        default: "/uploads/default.png",
+    },
+    role: {
+        type: String,
+        enum: ["USER", "ADMIN"],
+        default: "USER",
+    }
+}, { timestamps: true });
+
+userSchema.pre("save", function (next) {
+    const user = this;
+
+    if (!user.isModified("password")) return;
+
+    // const salt = randomBytes(16).toString();
+    const salt = randomBytes(16).toString();
+    const hashPassword = createHmac("sha256", salt).update(user.password).digest("hex");
+
+    this.salt = salt;
+    this.password = hashPassword;
+    next();
+})
+
+userSchema.static("matchPasswordAndGenerateToken", async function (email, password) {
+    const user = await this.findOne({ email });
+    if (!user) throw new Error("User not found");
+
+    const salt = user.salt;
+    const hashedPassword = user.password;
+    const userProvidedPassword = createHmac("sha256", salt).update(password).digest("hex");
+
+    if (hashedPassword !== userProvidedPassword) throw new Error("Incorrect Password");
+
+    const token = createTokenForUser(user);
+    return token;
+})
+
+const User = model("user", userSchema);
+module.exports = User;
+
+
+model/comment.js
+
+
+const { Schema, model } = require("mongoose");
+
+const commentSchema = new Schema({
+    content: {
+        type: String,
+        required: true
+    },
+    blogId: {
+        type: Schema.Types.ObjectId,
+        ref: "blog",
+    },
+    createdBy: {
+        type: Schema.Types.ObjectId,
+        ref: "user",
+    }
+}, { timestamps: true });
+
+const Comment = model("comment", commentSchema);
+
+module.exports = Comment;
+
+
+
+models/blog.js
+
+
+
+const { Schema, model } = require("mongoose");
+
+const blogSchema = new Schema({
+    title: {
+        type: String,
+        required: true
+    },
+    body: {
+        type: String,
+        required: true,
+    },
+    coverImageURL: {
+        type: String,
+        required: false,
+        default: "/images/uploads/blog/default.jpg",
+    },
+    createdBy: {
+        type: Schema.Types.ObjectId,
+        ref: "user",
+    }
+}, { timestamps: true });
+
+const Blog = model("blog", blogSchema);
+module.exports = Blog;
+
+
+
+middlewares/authentication.js
+
+
+
+app.js
+
+
+
+
+require("dotenv").config();
+
+const path = require("path");
+const express = require("express");
+const userRoute = require("./routes/user");
+const blogRoute = require("./routes/blog");
+const { connectToDb } = require("./connection");
+const cookieParser = require("cookie-parser");
+const { checkForAuthenticationCookie } = require("./middlewares/authentication");
+const Blog = require("./models/blog");
+
+const app = express();
+const PORT = process.env.PORT;
+
+// Connection to MongoDB Database
+connectToDb(process.env.MONGO_URL)
+    .then(() => console.log("Connected to MongoDB!!"))
+    .catch((err) => console.log("Mongo Error", err));
+
+// Static files middleware
+app.use(express.static(path.resolve('./public')));
+
+// Using Middleware
+// Serve static files from the 'public' directory
+app.use('/images/uploads', express.static('public/images/uploads'));
+
+// Using Middleware -- Plugin
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(checkForAuthenticationCookie("token"));
+
+app.set("view engine", "ejs");
+app.set("views", path.resolve("./views"));
+
+// Routes
+app.use("/user", userRoute);
+app.use("/blog", blogRoute);
+
+app.get("/", async (req, res) => {
+    const allBlogs = await Blog.find({});
+    res.render("home", {
+        user: req.user,
+        blogs: allBlogs
+    });
+});
+
+app.listen(PORT, () => console.log(Server Started at PORT ${PORT}));
+
+
+
+
+
+connection.js
+
+
+const mongoose = require("mongoose");
+mongoose.set('strictQuery', false);
+
+async function connectToDb(url) {
+    mongoose.connect(url);
+}
+
+module.exports = {
+    connectToDb,
+};
+
+
+
+package.json
+
+
+{
+  "name": "blogosaurus",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.5.2",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
+
+
+.env --->
+
+
+MONGO_URL=mongodb://127.0.0.1:27017/blogosaurus
+PORT=3000
