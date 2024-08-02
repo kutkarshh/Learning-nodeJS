@@ -10,9 +10,27 @@
 <body>
     <%- include('partials/navbar.ejs') %>
         <%- include('partials/script.ejs') %>
-            <div class="container col-md-5 card card-body mt-5">
+            <div class="container card card-body mt-5">
                 <h1 class="text-center">Welcome to Blogosaurus</h1>
+                <div class="row mt-3">
+                    <% blogs.forEach(blog=> { %>
+                        <div class="col-4 mt-2">
+                            <div class="card">
+                                <img src="<%= blog.coverImageURL %>" width="100%" height="220px" class="card-img-top"
+                                    alt="coverImageURL">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <%= blog.title %>
+                                    </h5>
+                                    <a href="/blog/<%= blog._id %>" class="btn btn-primary">View More</a>
+                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                </div>
             </div>
+
+
 </body>
 
 </html>

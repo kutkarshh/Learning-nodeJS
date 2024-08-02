@@ -5,12 +5,13 @@ const blogRoute = require("./routes/blog");
 const { connectToDb } = require("./connection");
 const cookieParser = require("cookie-parser");
 const { checkForAuthenticationCookie } = require("./middlewares/authentication");
+const Blog = require("./models/blog");
 
 const app = express();
 const PORT = 3000;
 
 // Static files middleware
-app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.resolve('./public')));
 
 // Using Middleware
 app.use(express.static('public', {
@@ -38,9 +39,11 @@ connectToDb("mongodb://127.0.0.1:27017/blogosaurus")
 app.use("/user", userRoute);
 app.use("/blog", blogRoute);
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+    const allBlogs = await Blog.find({});
     res.render("home", {
         user: req.user,
+        blogs: allBlogs
     });
 });
 

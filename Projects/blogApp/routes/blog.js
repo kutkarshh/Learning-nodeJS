@@ -9,14 +9,21 @@ router.get("/add-new", (req, res) => {
     return res.render("addBlog", { user: req.user })
 })
 
+router.get("/:id", async (req, res) => {
+    const { id } = req.params;
+    const blog = await Blog.findById(id).populate("createdBy");
+    return res.render("blog", { blog, user: req.user })
+})
+
 router.post("/add-new", uploadImage.single("coverImageURL"), async (req, res) => {
     const { title, body } = req.body;
-    const coverImageURL = req.file ? `/uploads/blog/${req.file.filename}` : null;
+    const coverImageURL = req.file ? `/images/uploads/blog/${req.file.filename}` : null;
     const createdBy = req.user._id;
+    var blog = { title, body, coverImageURL, createdBy };
+    if (coverImageURL === null) blog = { title, body, createdBy };
     try {
-        // await Blog.create({ title, body, createdBy, coverImageURL });
-        // return res.redirect("/");
-        console.log(title, body, coverImageURL, createdBy);
+        await Blog.create(blog);
+        return res.redirect("/");
     } catch (error) {
         console.log("Error----> " + error.message);
         return res.render("addBlog", { error: error.message });
