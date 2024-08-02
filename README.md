@@ -203,7 +203,3 @@ Send email notifications to users when someone comments on their blog post or wh
 
 **Mobile App**  
 Develop a mobile app for Blogosaurus to allow users to access the platform on-the-go. This will provide a better user experience and make it easier for users to write and read blogs from their mobile devices.
-
----
-
-Make sure to replace `link_to_screenshot1`, `link_to_screenshot2`, `link_to_screenshot3`, `link_to_screenshot4`, and `link_to_screenshot5` with the actual URLs of your screenshots.
