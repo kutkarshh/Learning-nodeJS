@@ -4,13 +4,12 @@
 <head>
     <title>Blogosaurus</title>
     <%- include('partials/head') %>
-
 </head>
 
-<body>
+<body class="bg-light">
     <%- include('partials/navbar.ejs') %>
         <%- include('partials/script.ejs') %>
-            <div class="container card card-body mt-5">
+            <div class="container card card-body my-5">
                 <h1 class="text-center">Welcome to Blogosaurus</h1>
                 <div class="row mt-3">
                     <% blogs.forEach(blog=> { %>

@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const User = require("../models/user");
 const uploadImage = require("../services/imageUploader");
+const Blog = require("../models/blog");
 const router = Router();
 
 router.get("/signin", (req, res) => {
@@ -27,10 +28,8 @@ router.post("/signup", uploadImage.single("profileImage"), async (req, res) => {
     const { fullName, email, password } = req.body;
     // profile image location will be stored in uploads folder
     const profileImageURL = req.file ? `/uploads/user/${req.file.filename}` : null;
-    // console.log(req.file);
     var user = { fullName, email, password, profileImageURL };
     try {
-        // console.log(fullName, email, password, profileImageURL);
         if (profileImageURL === null)
             user = { fullName, email, password };
         await User.create(user);
@@ -42,11 +41,24 @@ router.post("/signup", uploadImage.single("profileImage"), async (req, res) => {
     }
 });
 
-router.get("/profile", (req, res) => {
+router.get("/profile", async (req, res) => {
     if (!req.user) return res.redirect("/login");
-    // console.log("Profile page: User - " + JSON.stringify(req.user));
-    return res.render("profile", { user: req.user });
+
+    try {
+        // Fetch the user data
+        const user = req.user;
+
+        // Fetch all blogs created by the user
+        const blogs = await Blog.find({ createdBy: user._id });
+
+        // Render the profile view with user data and their blogs
+        return res.render("profile", { user, blogs });
+    } catch (error) {
+        console.log("Error fetching profile data: " + error.message);
+        return res.render("profile", { error: "Error fetching profile data" });
+    }
 });
+
 
 router.get("/logout", (req, res) => {
     console.log("User Logged out...");

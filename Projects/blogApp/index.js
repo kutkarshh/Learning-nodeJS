@@ -14,13 +14,9 @@ const PORT = 3000;
 app.use(express.static(path.resolve('./public')));
 
 // Using Middleware
-app.use(express.static('public', {
-    setHeaders: (res, path) => {
-        if (path.endsWith('.css')) {
-            res.setHeader('Content-Type', 'text/css');
-        }
-    }
-}));
+// Serve static files from the 'public' directory
+app.use('/images/uploads', express.static('public/images/uploads'));
+
 
 // Using Middleware -- Plugin
 app.use(express.urlencoded({ extended: false }));
