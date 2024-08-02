@@ -1,6 +1,7 @@
 const path = require("path");
 const express = require("express");
 const userRoute = require("./routes/user");
+const blogRoute = require("./routes/blog");
 const { connectToDb } = require("./connection");
 const cookieParser = require("cookie-parser");
 const { checkForAuthenticationCookie } = require("./middlewares/authentication");
@@ -35,6 +36,7 @@ connectToDb("mongodb://127.0.0.1:27017/blogosaurus")
 
 // Routes
 app.use("/user", userRoute);
+app.use("/blog", blogRoute);
 
 app.get("/", (req, res) => {
     res.render("home", {

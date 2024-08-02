@@ -26,11 +26,14 @@ router.post("/signin", async (req, res) => {
 router.post("/signup", uploadImage.single("profileImage"), async (req, res) => {
     const { fullName, email, password } = req.body;
     // profile image location will be stored in uploads folder
-    const profileImageURL = req.file ? `/uploads/${req.file.filename}` : null;
+    const profileImageURL = req.file ? `/uploads/user/${req.file.filename}` : null;
     // console.log(req.file);
+    var user = { fullName, email, password, profileImageURL };
     try {
         // console.log(fullName, email, password, profileImageURL);
-        await User.create({ fullName, email, password, profileImageURL });
+        if (profileImageURL === null)
+            user = { fullName, email, password };
+        await User.create(user);
         return res.redirect("/");
     } catch (error) {
         console.log("Error----> " + error.message);
