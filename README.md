@@ -1,7 +1,3 @@
-Here's the refined version of your documentation with the added content about future features and services, described in a detailed manner:
-
----
-
 # Blogosaurus
 
 ## Table of Contents
