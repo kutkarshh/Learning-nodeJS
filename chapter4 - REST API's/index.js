@@ -1,7 +1,7 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-const users = require("../chapter4/MOCK_DATA.json");
+const users = require("./MOCK_DATA.json");
 const PORT = 3000;
 const app = express();
 
