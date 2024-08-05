@@ -1,0 +1,43 @@
+# Get All Todos with User Name
+query {
+    getTodos {
+        id
+        title
+        completed
+    }
+    getAllUsers {
+      name
+    }
+}
+
+
+# Get User by ID
+
+--> Operation
+
+query GetUsers($getUserId: ID!) {
+    getUser(id: $getUserId) {
+      name
+    }
+}
+
+--> Variables
+{
+  "getUserId": "2"
+}
+
+#  Get Todos with User using a single nested query
+
+--> Operation
+
+query GetAllTodosWithUser {
+  getTodos {
+    title
+    completed
+    user {
+      name
+      email
+      phone
+    }
+  }
+}
